@@ -81,29 +81,30 @@ class FourthWordThatGenerator(data_generator.Generator):
 
     def sample(self):
         fourth_word_that = False
-        a1 = choice(self.starting_articles)[0]
+        a1 = choice(self.starting_articles)
+        a1_and_adjs = a1[0]
 
         if random.random() < 0.75:
             adj = choice(self.adjectives)
-            a1 += " " + adj[0]
+            a1_and_adjs += " " + adj[0]
             fourth_word_that = True
 
             if random.random() < 0.33:
                 adj = choice(self.adjectives)
-                a1 += " " + adj[0]
+                a1_and_adjs += " " + adj[0]
                 fourth_word_that = False
 
         n1 = choice(get_matches_of(a1, "arg_1", self.nominals))
         relative_clause, linguistic = self.make_relative_clause()
 
-        if random.random() < 0.5:
+        if random.random() < 0.8:
             # wh = choice(get_matched_by(n1, "arg_1", get_all_wh_words()))
             rc1, _ = self.make_relative_clause()
             # print(
             #     f"article 1: {a1[0]} \nsubject: {n1[0]} \nrelative clause: {rc1} \nrelative clause 2: {relative_clause}"
             # )
             sentence = "%s %s that %s %s." % (
-                a1,
+                a1_and_adjs,
                 n1[0],
                 rc1,
                 relative_clause,
@@ -113,14 +114,14 @@ class FourthWordThatGenerator(data_generator.Generator):
             # print(
             #     f"article 1: {a1[0]} \nsubject: {n1[0]} \nrelative clause: {relative_clause}"
             # )
-            sentence = "%s %s %s." % (a1, n1[0], relative_clause)
+            sentence = "%s %s %s." % (a1_and_adjs, n1[0], relative_clause)
             # print(data)
 
         data = {
             "surface": str(int(fourth_word_that)),
             "linguistic": linguistic,
         }
-
+        print(sentence)
         data["sentence"] = sentence
         return data, data["sentence"]
 
